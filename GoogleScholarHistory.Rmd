@@ -139,8 +139,21 @@ ggplot(df2, aes(x = year, y = total, color = name)) +
 
 ## College of Social Science and Public Policy Faculty
 
-Get the data from a spreadsheet. It was emailed by Deana Rohlinger on March 2, 2020. I posted it on Google Sheets and added the Department names.
+Get the data from a spreadsheet. It was emailed by Deana Rohlinger on March 2, 2020. I posted it on Google Sheets and added the Department names. Here I import the data and remove rows with a missing ID.
 ```{r}
-College.df <- read.csv(file = "Faculty Google Scholar ID.csv", header = TRUE)
+College.df <- read.csv(file = "Faculty Google Scholar ID.csv", header = TRUE,
+                       stringsAsFactors = FALSE) %>%
+  dplyr::filter(ID != "")
 ```
 
+Get citation history from google. Note: There maybe a limit on how many google
+```{r}
+df <- data.frame()
+for(i in 1:nrow(College.df)){
+  df0 <- get_citation_history(College.df$ID[i])
+  df0$Name <- College.df$Name[i]
+  df0$Department <- College.df$Department[i]
+  df <- rbind(df0, df)
+}
+
+```
