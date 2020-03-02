@@ -9,7 +9,7 @@ Playing with Google Scholar: from  http://fossilsandshit.com/research/metrics/
 
 Install package and get my Google Scholar ID.
 ```{r}
-install.packages("scholar")
+#install.packages("scholar")
 library(scholar)
 ```
 
@@ -165,20 +165,21 @@ write.table(df, file = "CollegeLevelData.txt")
 
 Plot
 ```{r}
-df <- read.table(df, header = TRUE)
+df <- read.table(file = "CollegeLevelData.txt", 
+                 header = TRUE)
 
 df2 <- df %>%
-  dplyr::filter(year < 2020) %>%
+  dplyr::filter(year < 2020 & year >= 1995) %>%
   dplyr::group_by(year, Department) %>%
   dplyr::summarise(TotalCites = sum(cites))
 
 
-ggplot(df, aes(x = year, y = cites, fill = Name)) +
+ggplot(df2, aes(x = year, y = TotalCites, fill = Department)) +
   geom_bar(stat = "identity")  +
   scale_x_continuous() +
-  scale_y_continuous(limits = c(0, 3000)) +
+  scale_y_continuous(limits = c(0, 15000)) +
   xlab("") + ylab("Number of Citations") +
   theme_minimal() +
-  ggtitle("Citations by Current FSU Geography Faculty\n [from Google Scholar]",
-          subtitle = "Analyzed using the scholar package by James Keirstead")
+  ggtitle("Citations by Current College Faculty\n [from Google Scholar]")
 
+```
