@@ -107,7 +107,7 @@ h.index = predict_h_index(ID0)
 h.index
 ```
 
-Compare scholars. How do James Elsner and Sarah Lester compare?
+Compare scholars.
 ```{r}
 df <- compare_scholars(ids)
 
@@ -155,5 +155,4 @@ for(i in 1:nrow(College.df)){
   df0$Department <- College.df$Department[i]
   df <- rbind(df0, df)
 }
-
 ```
