@@ -148,8 +148,8 @@ College.df <- read.csv(file = "Faculty Google Scholar ID.csv", header = TRUE,
 #  dplyr::filter(Department == "Geography")
 ```
 
-Get citation history from google. Note: There maybe a limit on how many google
-```{r}
+Get citation history from google. Note: There maybe a limit on how many times you ping google.
+```{r, eval=FALSE}
 df <- data.frame()
 df0 <- data.frame()
 for(i in 1:nrow(College.df)){
@@ -159,10 +159,14 @@ for(i in 1:nrow(College.df)){
   df0$Department <- College.df$Department[i]
   df <- rbind(df0, df)
 }
+
+write.table(df, file = "CollegeLevelData.txt")
 ```
 
 Plot
 ```{r}
+df <- read.table(df, header = TRUE)
+
 df2 <- df %>%
   dplyr::filter(year < 2020) %>%
   dplyr::group_by(year, Department) %>%
