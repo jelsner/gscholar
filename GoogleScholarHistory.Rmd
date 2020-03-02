@@ -143,16 +143,38 @@ Get the data from a spreadsheet. It was emailed by Deana Rohlinger on March 2, 2
 ```{r}
 College.df <- read.csv(file = "Faculty Google Scholar ID.csv", header = TRUE,
                        stringsAsFactors = FALSE) %>%
-  dplyr::filter(ID != "")
+  dplyr::filter(ID != "") %>%
+  dplyr::filter(Name != "James Wright") 
+#  dplyr::filter(Department == "Geography")
 ```
 
 Get citation history from google. Note: There maybe a limit on how many google
 ```{r}
 df <- data.frame()
+df0 <- data.frame()
 for(i in 1:nrow(College.df)){
+  print(i)
   df0 <- get_citation_history(College.df$ID[i])
   df0$Name <- College.df$Name[i]
   df0$Department <- College.df$Department[i]
   df <- rbind(df0, df)
 }
 ```
+
+Plot
+```{r}
+df2 <- df %>%
+  dplyr::filter(year < 2020) %>%
+  dplyr::group_by(year, Department) %>%
+  dplyr::summarise(TotalCites = sum(cites))
+
+
+ggplot(df, aes(x = year, y = cites, fill = Name)) +
+  geom_bar(stat = "identity")  +
+  scale_x_continuous() +
+  scale_y_continuous(limits = c(0, 3000)) +
+  xlab("") + ylab("Number of Citations") +
+  theme_minimal() +
+  ggtitle("Citations by Current FSU Geography Faculty\n [from Google Scholar]",
+          subtitle = "Analyzed using the scholar package by James Keirstead")
+
